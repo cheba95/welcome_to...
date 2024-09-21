@@ -13,29 +13,19 @@ realtor = "риэлтор"
 fence = "забор"
 app = "строение"
 
-cards_base = [(5, park), (4, workers), (9, park), (3, pool), (7, realtor), (12, park), (8, workers), (5, realtor),
+cards_base = ((5, park), (4, workers), (9, park), (3, pool), (7, realtor), (12, park), (8, workers), (5, realtor),
               (8, app), (6, pool), (3, workers), (5, realtor), (7, pool), (4, park), (11, fence), (10, realtor),
               (9, pool), (7, park), (9, realtor), (13, workers), (8, park), (6, fence), (5, fence), (8, fence),
               (10, fence), (7, park), (3, app), (10, workers), (11, fence), (15, fence), (9, park), (11, realtor),
               (11, park), (6, app), (4, app), (10, park), (12, realtor), (6, park), (10, pool), (9, fence),
               (12, workers), (13, app), (13, pool), (12, app), (5, fence), (2, fence), (11, realtor), (15, realtor),
               (14, park), (4, realtor), (10, app), (8, fence), (7, fence), (8, park), (6, workers), (2, park),
-              (1, realtor), (6, realtor), (7, realtor), (14, fence), (9, realtor), (8, pool), (1, fence)]
+              (1, realtor), (6, realtor), (7, realtor), (14, fence), (9, realtor), (8, pool), (1, fence))
 
-harry_potter_cards = [("9 и 3/4", realtor), ("9 и 3/4", park), ("9 и 3/4", fence)]
-
-if input('''Для небольшого упрощения игры вы можете добавить 3 дополнительные карты "9 и 3/4" в колоду. 
-Введите "да", если хотите их добавить, либо нажмите "ENTER" для продолжения без них''') == "да":
-    cards_base += harry_potter_cards
-    print('Вы добавили карты "9 и 3/4"')
-else:
-    print('Вы играете со стандартным набором карт, без карт "9 и 3/4"')
-
-shuffle(cards_base)
+harry_potter_cards = (("9 и 3/4", realtor), ("9 и 3/4", park), ("9 и 3/4", fence))
 
 # if input('''Для игры в одиночном режиме введите "да". В колоду будет замешано 3 карты бота "План выполнен"''') == "да":
-    # print("Вы выбрали одиночный режим") - задел для будущего сшивания в единый проект соло и мультиплеера
-
+# print("Вы выбрали одиночный режим") - задел для будущего сшивания в единый проект соло и мультиплеера
 
 from random import randint
 ai_plan_A = "А"
@@ -48,23 +38,38 @@ ai_plan = {ai_plan_A: ai_plan_A_points, ai_plan_B: ai_plan_B_points, ai_plan_C: 
 ai_plan_list = list(ai_plan.keys())
 current_ai_plan = [i for i in ai_plan_list]
 cards = [i for i in cards_base]
+
+if input('''Для небольшого упрощения игры вы можете добавить 3 дополнительные карты "9 и 3/4" в колоду. 
+Введите "да", если хотите их добавить, либо нажмите "ENTER" для продолжения без них''') == "да":
+    cards += harry_potter_cards
+    print('Вы добавили карты "9 и 3/4"')
+else:
+    print('Вы играете со стандартным набором карт, без карт "9 и 3/4"')
+
+shuffle(cards)
+
+# добавляем случайный план бота в последние 20 карт колоды
 cards.insert(-randint(1,20), current_ai_plan.pop(randint(0,2)))
 
 ai_opponents = (("номер", "имя", "сложность", "сквер", "бассеин", "рабочие", "забор", "строение", "риэлтор", "планы застройки"), 
-                (1, "Сергей", 1, 1, 1, 1, 2, 1, 2, ai_plan_A), (2, "Алекс", 2, 3, 1, 1, 2, 1, 2, "-"), 
-                (3, "Роза", 3, 4, 0, 2, 2, 2, 1, (ai_plan_A, ai_plan_B)), (4, "Мария", 3, 0, 5, 2, 2, 3, 2, ai_plan_B), 
+                (1, "Сергей", 1, 1, 1, 1, 2, 1, 2, (ai_plan_A, )), 
+                (2, "Алекс", 2, 3, 1, 1, 2, 1, 2, ("-", )), 
+                (3, "Роза", 3, 4, 0, 2, 2, 2, 1, (ai_plan_A, ai_plan_B)), 
+                (4, "Мария", 3, 0, 5, 2, 2, 3, 2, (ai_plan_B, )), 
                 (5, "Алан", 4, 3, 2, 2, 1, 2, 2, (ai_plan_A, ai_plan_B, ai_plan_C)), 
-                (6, "Ирина", 4, 2, 3, 1, 3, 2, 2, (ai_plan_A, ai_plan_C)), (7, "Анн", 5, 3, 2, 1, 3, 3, 3, ai_plan_B), 
-                (8, "Кармен", 5, 0, 3, 2, 3, 4, 3, (ai_plan_A, ai_plan_B)), (9, "Амаза", 6, 4, 4, 1, 3, 2, 3, (ai_plan_A, ai_plan_B)), 
+                (6, "Ирина", 4, 2, 3, 1, 3, 2, 2, (ai_plan_A, ai_plan_C)), 
+                (7, "Анн", 5, 3, 2, 1, 3, 3, 3, (ai_plan_B, )), 
+                (8, "Кармен", 5, 0, 3, 2, 3, 4, 3, (ai_plan_A, ai_plan_B)), 
+                (9, "Амаза", 6, 4, 4, 1, 3, 2, 3, (ai_plan_A, ai_plan_B)), 
                 (10, "Фрэнк", 6, 4, 3, 2, 2, 1, 4, (ai_plan_B, ai_plan_C)), 
                 (11, "Бен", 7, 4, 4, 2, 3, 4, 4, ((ai_plan_A, ai_plan_B, ai_plan_C)))) 
-# модификаторы очков для бота в последовательности: номер(0), имя(1), уровень сложности(2), сквер(3), бассеин(4), рабочие(5), забор(6), 
-# строение(7), риэлтор(8), планы застройки
+
 print("Выберите оппонента. В таблице ниже указаны их номера, имена и модификаторы свойств карт")
 
-for i in ai_opponents:
-    for j in i:
-        print(str(j).ljust(10), end="")
+for opponent in ai_opponents:
+    for i in range(9):
+        print(str(opponent[i]).ljust(10), end="")
+    print(str("".join(opponent[9])).ljust(10))
     print()
 
 ai_point_tuple_num = 0
@@ -78,8 +83,9 @@ while not 1 <= ai_point_tuple_num <= 11:
         print("!!!Ошибка!!!")
 
 ai_point_tuple = ai_opponents[ai_point_tuple_num]
+ai_name = ai_point_tuple[1]
 
-print(f'Вы играете с ботом "{ai_point_tuple[1]}", уровень сложности "{ai_point_tuple[0]}"')
+print(f'Вы играете с ботом "{ai_name}", уровень сложности "{ai_point_tuple[0]}"')
 
 ai_set = []
 wannaplay = True
@@ -88,7 +94,7 @@ while wannaplay:
         if cards[i] in ai_plan_list:
             print(f'Вышел план застройки "{cards[i]}"')
             if cards[i] in ai_point_tuple[9]:
-                plan_points = int(input(f'''Бот "{ai_point_tuple[1]}" может выполнить этот план застройки. Если вы не успели выполнить 
+                plan_points = int(input(f'''Бот "{ai_name}" может выполнить этот план застройки. Если вы не успели выполнить 
                   этот план раньше бота, введите большее число очков, причитающееся за выполнение плана - их получит бот. 
                   Вы в дальнейшем за выполнение плана сможете получить лишь меньшее количество очков. 
                   Если же вы успели выполнить план раньше бота - введите меньшее число очков, причитающееся за выполнение плана - 
@@ -116,15 +122,14 @@ while wannaplay:
     print(f" Застройка бота: {ai_set}")
     for i in range(3):
         del cards[0]
-    wannaplay = False
     if len(cards) == 3:
         print("ВНИМАНИЕ! Колода закончилась и затасована заново")
         cards = [i for i in cards_base]
         cards.extend(current_ai_plan) # одиночный режим
         print("В колоду замешаны 2 оставшихся плана застройки бота. Поторопитесь выполнить планы застройки, чтобы успеть раньше него!")
         shuffle(cards)
-    if input("Нажми 'ENTER' для продолжения игры или введите любой символ для завершения и подсчета очков") == "":
-        wannaplay = True
+    if input("Нажми 'ENTER' для продолжения игры или введите любой символ для завершения и подсчета очков") != "":
+        wannaplay = False
 
 # считаем очки бота за выполнение планов застройки
 
@@ -167,7 +172,6 @@ ai_quarter_set_good = [i for i in ai_quarter_set if i != []]
 
 ai_quarter_points_list = []
 
-#здесь будет разница в количестве очков за элементы квартала в зависимости от уровня сложности. Пока ставлю по уровню сложности 1
 app_bonus = ai_point_tuple[7]
 realtor_mult = ai_point_tuple[8]
 
@@ -189,7 +193,7 @@ ai_quarter_points = sum(sorted(ai_quarter_points_list, reverse=True)[:5])
 
 ai_vic_points = ai_plan_points + ai_points_workers +  ai_workers_place_points + ai_pools_points + ai_fences_points + ai_parks_points + ai_quarter_points
 print(f'''Итоговая застройка бота: {ai_set}. 
-{ai_point_tuple[1]} получает {ai_vic_points} очков, а именно:
+{ai_name} получает {ai_vic_points} очков, а именно:
 {ai_plan_points} - количество очков за выолнение планов застройки, 
 в том числе {ai_plan_A_points} за план "А", {ai_plan_B_points} за план "Б", {ai_plan_C_points} за план "В";
 {ai_points_workers} - очки за рабочих;
