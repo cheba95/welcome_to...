@@ -44,7 +44,7 @@ basic_city_plan_cards_С = (("1 квартал из 2 домов + 1 кварт�
                            ("1 квартал из 1 дома + 1 квартал из 3 домов + 1 квартал из 6 домов", 12, 7),
                            ("1 квартал из 1 дома + 2 квартала из 2 домов + 1 квартал из 3 домов", 11, 6))
 
-from random import choice
+from random import choice, shuffle, randint
 
 current_plan_A, current_plan_B, current_plan_C = choice(basic_city_plan_cards_A), choice(basic_city_plan_cards_B), choice(basic_city_plan_cards_С)
 
@@ -53,8 +53,6 @@ print(f'''Ваши планы застройки на игру:
 План Б: {current_plan_B[0]}, {current_plan_B[1]} очков, если успеете выполнить план раньше бота, иначе {current_plan_B[2]}
 План В: {current_plan_C[0]}, {current_plan_C[1]} очков, если успеете выполнить план раньше бота, иначе {current_plan_C[2]}''')
 
-from random import shuffle, randint
-from copy import deepcopy
 ai_plan_A = "А"
 ai_plan_B = "Б"
 ai_plan_C = "В"
@@ -63,8 +61,8 @@ ai_plan_B_points = 0
 ai_plan_C_points = 0
 ai_plan = {ai_plan_A: ai_plan_A_points, ai_plan_B: ai_plan_B_points, ai_plan_C: ai_plan_C_points}
 ai_plan_list = list(ai_plan.keys())
-current_ai_plan = list(deepcopy(ai_plan_list))
-cards = list(deepcopy(cards_base))
+current_ai_plan = [i for i in ai_plan_list]
+cards = [i for i in cards_base]
 
 if input('''Для небольшого упрощения игры вы можете добавить 3 дополнительные карты "9 и 3/4" в колоду. 
 Введите "да", если хотите их добавить, либо нажмите "ENTER" для продолжения без них''') == "да":
@@ -155,7 +153,7 @@ while wannaplay:
         del cards[0]
     if len(cards) == 3:
         print("ВНИМАНИЕ! Колода закончилась и затасована заново")
-        cards = list(deepcopy(cards_base))
+        cards = cards = [i for i in cards_base]
         cards.extend(current_ai_plan) # одиночный режим
         print("В колоду замешаны 2 оставшихся плана застройки бота. Поторопитесь выполнить планы застройки, чтобы успеть раньше него!")
         shuffle(cards)
