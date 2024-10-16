@@ -2,8 +2,6 @@
 # добавить экспертные планы застройки и возможность выбора планов: либо только стандартные, либо расширенные, либо и то и то, в различных вариациях
 # т.е. допустим плланы А расширенные, планы Б стандартные, планы С - смесь расширенных и стандартных
 # по необходимости автоматизировать применение планов застройки к боту
-# добавить основной режим
-
 
 print("Это программа для игры в 'Бумажные кварталы' в одиночном режиме. Подготовьте планшет игрока")
 
@@ -55,8 +53,8 @@ print(f'''Ваши планы застройки на игру:
 План Б: {current_plan_B[0]}, {current_plan_B[1]} очков, если успеете выполнить план раньше бота, иначе {current_plan_B[2]}
 План В: {current_plan_C[0]}, {current_plan_C[1]} очков, если успеете выполнить план раньше бота, иначе {current_plan_C[2]}''')
 
-from random import shuffle
-from random import randint
+from random import shuffle, randint
+from copy import deepcopy
 ai_plan_A = "А"
 ai_plan_B = "Б"
 ai_plan_C = "В"
@@ -65,8 +63,8 @@ ai_plan_B_points = 0
 ai_plan_C_points = 0
 ai_plan = {ai_plan_A: ai_plan_A_points, ai_plan_B: ai_plan_B_points, ai_plan_C: ai_plan_C_points}
 ai_plan_list = list(ai_plan.keys())
-current_ai_plan = [i for i in ai_plan_list]
-cards = [i for i in cards_base]
+current_ai_plan = list(deepcopy(ai_plan_list))
+cards = list(deepcopy(cards_base))
 
 if input('''Для небольшого упрощения игры вы можете добавить 3 дополнительные карты "9 и 3/4" в колоду. 
 Введите "да", если хотите их добавить, либо нажмите "ENTER" для продолжения без них''') == "да":
@@ -130,10 +128,10 @@ while wannaplay:
             # здесь пока вручную вводить очки с планов застройки, 
             # впоследствии попробовать автоматизировать, если в этом будет смысл.
                 plan_points = int(input(f'''Бот "{ai_name}" может выполнить этот план застройки. Если вы не успели выполнить 
-                  этот план раньше бота, введите большее число очков, причитающееся за выполнение плана - их получит бот. 
-                  Вы в дальнейшем за выполнение плана сможете получить лишь меньшее количество очков. 
-                  Если же вы успели выполнить план раньше бота - введите меньшее число очков, причитающееся за выполнение плана - 
-                  их получит бот''')) 
+этот план раньше бота, введите большее число очков, причитающееся за выполнение плана - их получит бот. 
+Вы в дальнейшем за выполнение плана сможете получить лишь меньшее количество очков. 
+Если же вы успели выполнить план раньше бота - введите меньшее число очков, причитающееся за выполнение плана - 
+их получит бот''')) 
                 ai_plan[cards[i]] = plan_points
                 print(f'Бот получил {plan_points} очков за план застройки "{cards[i]}"')
             else:
@@ -157,7 +155,7 @@ while wannaplay:
         del cards[0]
     if len(cards) == 3:
         print("ВНИМАНИЕ! Колода закончилась и затасована заново")
-        cards = [i for i in cards_base]
+        cards = list(deepcopy(cards_base))
         cards.extend(current_ai_plan) # одиночный режим
         print("В колоду замешаны 2 оставшихся плана застройки бота. Поторопитесь выполнить планы застройки, чтобы успеть раньше него!")
         shuffle(cards)
@@ -226,8 +224,8 @@ ai_quarter_points = sum(sorted(ai_quarter_points_list, reverse=True)[:5])
 
 ai_vic_points = ai_plan_points + ai_points_workers +  ai_workers_place_points + ai_pools_points + ai_fences_points + ai_parks_points + ai_quarter_points
 print(f'''Итоговая застройка бота: {ai_set}. 
-{ai_name} получает {ai_vic_points} очков, а именно:
-{ai_plan_points} - количество очков за выолнение планов застройки, 
+Очки бота "{ai_name}": {ai_vic_points}, а именно:
+{ai_plan_points} - очки за выполнение планов застройки, 
 в том числе {ai_plan_A_points} за план "А", {ai_plan_B_points} за план "Б", {ai_plan_C_points} за план "В";
 {ai_points_workers} - очки за рабочих;
 {ai_workers_place_points} - очки за место по количеству рабочих;
