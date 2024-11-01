@@ -140,6 +140,7 @@ turn_counter = 0
 wannaplay = True
 # на каждом этапе выводим игроку списокк планов застройки - чтобы не забыл
 while wannaplay:
+    print()
     print(f'''Планы застройки:
 План А: {current_plan_A[0]}, очки: {current_plan_A[1]} / {current_plan_A[2]}
 План Б: {current_plan_B[0]}, очки: {current_plan_B[1]} / {current_plan_B[2]}
